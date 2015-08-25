@@ -5,7 +5,7 @@ Group - 7 , mChat chat with anyone you want, about anything you want, Here!
 - Krittanon Wisedchart Student ID 56010020
 - Akkaratanapat Tangkitsiri Student ID 56011439
 
-# Project description
+# Project Description
   - chat
   - mark
   - etc..
