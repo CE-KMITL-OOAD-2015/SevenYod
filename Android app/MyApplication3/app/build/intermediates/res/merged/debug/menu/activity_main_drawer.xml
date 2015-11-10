@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_account_box_white_48dp"
+            android:title="Profile" />
+        <item
+            android:id="@+id/nav_community"
+            android:icon="@drawable/ic_group_white_48dp"
+            android:title="Community" />
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_message_white_48dp"
+            android:title="Chat" />
+        <item
+            android:id="@+id/nav_marked"
+            android:icon="@drawable/ic_star_white_48dp"
+            android:title="Marked" />
+    </group>
+
+    <item android:title="M-Chat">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_info_white_48dp"
+                android:title="About" />
+            <item
+                android:id="@+id/nav_loglout"
+                android:icon="@drawable/ic_power_settings_new_white_48dp"
+                android:title="Log out" />
+        </menu>
+    </item>
+
+</menu>
+<!-- From: file:/D:/Android/AndroidStudioProjects/MyApplication3/app/src/main/res/menu/activity_main_drawer.xml -->

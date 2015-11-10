@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/pad_20dp"
+    android:paddingLeft="@dimen/pad_15dp"
+    android:paddingRight="@dimen/pad_15dp"
+    android:paddingTop="@dimen/pad_20dp"
+    tools:context="com.akkaratanapat.altear.myapplication.FirstActivity">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mchat"
+        android:layout_marginBottom="@dimen/pad_20dp" />
+
+    <EditText
+        android:id="@+id/user"
+        style="@style/editext_graybg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_person_black_48dp"
+        android:hint="Username" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/pwd"
+        style="@style/editext_graybg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/pad_20dp"
+        android:layout_marginTop="@dimen/pad_5dp"
+        android:drawableLeft="@drawable/ic_vpn_key_black_48dp"
+        android:hint="Password"
+        android:inputType="textPassword" >
+    </EditText>
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:id="@+id/button"
+            android:textColor="@color/white"
+            android:background="@color/blue_btn"
+            android:layout_above="@+id/button2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="@dimen/pad_15dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:id="@+id/button2"
+            android:textColor="@color/white"
+            android:background="@color/cyan_btn"
+            android:layout_centerVertical="true"
+            android:layout_alignStart="@+id/button" />
+    </LinearLayout>
+
+</LinearLayout>
