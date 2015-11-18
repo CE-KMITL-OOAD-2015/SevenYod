@@ -1,16 +1,17 @@
 package com.akkaratanapat.altear.myapplication;
 
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -20,27 +21,42 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MarkedActivity extends AppCompatActivity {
 
-
     ListView lv;
+    Button sendBtn;
+    EditText messageText;
+    TextView textViewName;
     private ArrayList<Conversation> convList = new ArrayList<>();
     ChatAdapter nChat;
     Bundle b;
-    private Handler handler;
+    Handler handler = new Handler();
+    boolean isRunning;
+    Runnable r;
+
 
     public MarkedActivity() {
 
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("kuyyyyyyyyyy", "stop" + isRunning);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("kuyyyyyyyyyy", "restart" + isRunning);
     }
 
     @Override
@@ -49,81 +65,82 @@ public class MarkedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_marked);
         b = getIntent().getExtras();
         lv = (ListView) findViewById(R.id.list);
-        setComponent();
-        final Timestamp ts = new Timestamp(System.currentTimeMillis());
-        Conversation con = new Conversation("aaa", "2015-11-04%2009:09:05", "1", b.getString("ID"));
-        Conversation con2 = new Conversation("bbb", "2015-11-04%2009:09:05", "2", b.getString("ID"));
-        con.setMark("false");
-        con2.setMark("false");
-        convList.add(con);
-        convList.add(con2);
+        textViewName = (TextView)findViewById(R.id.textView2);
+        sendBtn = (Button) findViewById(R.id.btnSend);
+        messageText = (EditText) findViewById(R.id.txt);
         nChat = new ChatAdapter(MarkedActivity.this, convList);
+
+        setComponent();
         lv.setAdapter(nChat);
         lv.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         lv.setStackFromBottom(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if (responseJsonFromWebToggleMarked(b.getString("ID"), b.getString("IdFriend"), ts.toString(), convList.get(position).getMsg())) {
-                    convList.get(position).changeMark();
-                } else {
-                    Toast.makeText(getBaseContext(), "Error", Toast.LENGTH_SHORT).show();
-                }
+                convList.get(position).changeMark();
+                toggleMarked(convList.get(position).getID());
                 nChat.notifyDataSetChanged();
             }
         });
+        Toast.makeText(getBaseContext(),"Cre",Toast.LENGTH_SHORT).show();
 
         handler = new Handler();
-
-        final Runnable r = new Runnable() {
+        r = new Runnable() {
             public void run() {
                 loadConversation();
                 handler.postDelayed(this, 1000);
             }
         };
-
         handler.postDelayed(r, 1000);
+
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run()
+//            {
+//                    loadConversation();
+//            }
+//        }, 3000);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        handler.removeCallbacks(r);
     }
 
 
     public void setComponent() {
+        textViewName.setText(b.getString("Friend"));
     }
-
 
     public void loadConversation() {
-        Timestamp ts = new Timestamp(System.currentTimeMillis());
-        responseJsonFromWebForLoadMarked(b.getString("ID"), b.getString("IdFriend"), ts.toString());
+        String time = "2015-11-04 09:09:05";
+        int length = convList.size();
+        if(length>0) {
+            time = convList.get(length - 1).getDate();
+        }
+        responseJsonFromWebForLoadMessage(b.getString("ID"), b.getString("IdFriend"), time);
     }
 
-
-    public boolean responseJsonFromWebToggleMarked(String idUser, String idBuddy, String date, String message) {
-        String url = "http://mol100.esy.es/ooad/lin?user=" + idUser + "&pass=" + idUser;
-        final boolean[] check = {false};
-        final ProgressDialog dia = ProgressDialog.show(MarkedActivity.this, null,
-                "Loading");
+    public void toggleMarked(final String idMessage){
+        String url = "http://203.151.92.184:8080/togglemarked/" + idMessage;
+//        final ProgressDialog dia = ProgressDialog.show(ChatActivity.this, null,
+//                "Loading");
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-
                             JSONObject resultObjectJSON = response.getJSONObject("resultObject");
-                            String responText = resultObjectJSON.getString("res");
+                            String responText = resultObjectJSON.getString("response");
                             if (responText.equals("true")) {
-                                dia.dismiss();
-                                check[0] = true;
-                                Toast.makeText(getApplicationContext(), resultObjectJSON.getString("name") + " has logged in", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(getBaseContext(), MainActivity.class);
-                                i.putExtra("User", new User(resultObjectJSON.getString("name"), resultObjectJSON.getString("email"), resultObjectJSON.getString("id")));
-                                startActivity(i);
+                                //dia.dismiss();
+                                Toast.makeText(getBaseContext(),""+idMessage,Toast.LENGTH_SHORT).show();
                             } else {
-                                dia.dismiss();
-                                check[0] = false;
-                                Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
+                                //dia.dismiss();
+                                Toast.makeText(getBaseContext(),"sorry",Toast.LENGTH_SHORT).show();
                             }
-
-
+                            nChat.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -131,40 +148,43 @@ public class MarkedActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        dia.dismiss();
-                        check[0] = false;
+//                        dia.dismiss();
                         Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
         RequestQueue myrequestQueue = Volley.newRequestQueue(this);
         myrequestQueue.add(jsObjRequest);
-        return check[0];
     }
 
-    public void responseJsonFromWebForLoadMarked(String idUser, String idBuddy, String date) {
-        String url = "http://mol100.esy.es/ooad/lin?user=" + idUser + "&pass=" + idUser;
-        final ProgressDialog dia = ProgressDialog.show(MarkedActivity.this, null,
-                "Loading");
+    public void responseJsonFromWebForLoadMessage(final String idUser, String idBuddy, String date) {
+        String url = "http://203.151.92.184:8080/loadmarked/" + idUser + "/" + idBuddy;
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-
                             JSONObject resultObjectJSON = response.getJSONObject("resultObject");
-                            String responText = resultObjectJSON.getString("res");
-                            if (responText.equals("true")) {
-                                dia.dismiss();
-                                Toast.makeText(getApplicationContext(), resultObjectJSON.getString("name") + " has logged in", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(getBaseContext(), MainActivity.class);
-                                i.putExtra("User", new User(resultObjectJSON.getString("name"), resultObjectJSON.getString("email"), resultObjectJSON.getString("id")));
-                                startActivity(i);
-                            } else {
-                                dia.dismiss();
-                                Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
+                            String res = resultObjectJSON.getString("response");
+                            if (res.equals("true")) {
+                                JSONArray message = resultObjectJSON.getJSONArray("message");
+                                convList.clear();
+                                for (int i = 0; i < message.length(); i++) {
+                                    JSONObject obj = (JSONObject) message.get(i);
+                                    Conversation c = new Conversation(obj.getString("text")
+                                            , obj.getString("date"), obj.getString("sender"), idUser);
+                                    c.setMark(obj.getString("marked"));
+                                    c.setID(obj.getString("id"));
+                                    convList.add(c);
+                                }
+                                nChat.notifyDataSetChanged();
                             }
-
-
+                            else{
+                                if(convList.isEmpty()){
+                                    convList.clear();
+                                    nChat.notifyDataSetChanged();
+                                }
+                                Toast.makeText(getBaseContext(), "Just do it!!!", Toast.LENGTH_SHORT).show();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -172,7 +192,6 @@ public class MarkedActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        dia.dismiss();
                         Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
                     }
                 });

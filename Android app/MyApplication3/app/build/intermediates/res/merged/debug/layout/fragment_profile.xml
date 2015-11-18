@@ -25,7 +25,7 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:id="@+id/imageView5"
+                    android:id="@+id/imageView"
                     android:src="@drawable/ic_person_black_48dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="70dp"
@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Edit"
-                    android:id="@+id/button3"
+                    android:id="@+id/buttonEdit"
                     android:drawableLeft="@drawable/ic_create_white_48dp"
                     android:background="@color/orange_btn"
                     android:textColor="@color/white"
@@ -81,4 +81,4 @@
 
     </LinearLayout>
 </RelativeLayout>
-<!-- From: file:/D:/Android/AndroidStudioProjects/MyApplication3/app/src/main/res/layout/fragment_profile.xml -->
+<!-- From: file:/D:/Android/MyApplication3/app/src/main/res/layout/fragment_profile.xml -->

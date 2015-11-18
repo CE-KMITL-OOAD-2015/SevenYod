@@ -8,4 +8,4 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>
-<!-- From: file:/D:/Android/AndroidStudioProjects/MyApplication3/app/src/main/res/menu/menu_start.xml -->
+<!-- From: file:/D:/Android/MyApplication3/app/src/main/res/menu/menu_start.xml -->

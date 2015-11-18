@@ -20,7 +20,7 @@ public class FriendListFragment extends Fragment {
     ListView listViewFriend;
 
     String ID;
-    String[] list, idFriend;
+    String[] list, idFriend,emailFriend;
     View v;
     FriendList friendList;
     int mode;
@@ -34,12 +34,18 @@ public class FriendListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_friend_list, container, false);
+        setComponent();
+        return v;
+    }
+
+    public void setComponent(){
         Bundle bundle = this.getArguments();
         list = bundle.getStringArray("List");
         mode = bundle.getInt("mode");
         idFriend = bundle.getStringArray("IDFriend");
         ID = bundle.getString("ID");
-        friendList = new FriendList(getActivity(), android.R.layout.simple_list_item_1, list);
+        emailFriend = bundle.getStringArray("EmailFriend");
+        friendList = new FriendList(getActivity(), android.R.layout.simple_list_item_1, list,emailFriend);
 
         listViewFriend = (ListView) v.findViewById(R.id.listFriend);
         listViewFriend.setAdapter(friendList);
@@ -63,9 +69,6 @@ public class FriendListFragment extends Fragment {
                 }
             }
         });
-        return v;
     }
-
-
 }
 

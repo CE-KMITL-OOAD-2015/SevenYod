@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -26,13 +25,11 @@ public class FirstActivity extends AppCompatActivity {
 
     Button loginBtn, registerBtn;
     EditText userName, password;
-    Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
         setCustomComponent();
-
     }
 
     public void setCustomComponent() {
@@ -85,9 +82,9 @@ public class FirstActivity extends AppCompatActivity {
                             //Toast.makeText(getApplicationContext(), resultObjectJSON.getString("response"), Toast.LENGTH_SHORT).show();
                             if (responText.equals("true")) {
                                 dia.dismiss();
-                                Toast.makeText(getApplicationContext(), resultObjectJSON.getString("username") + " has logged in", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), resultObjectJSON.getString("alias") + " has logged in", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(getBaseContext(), MainActivity.class);
-                                i.putExtra("User",new User(resultObjectJSON.getString("username"),resultObjectJSON.getString("email"),resultObjectJSON.getString("userid")));
+                                i.putExtra("User",new User(resultObjectJSON.getString("alias"),resultObjectJSON.getString("email"),resultObjectJSON.getString("userid")));
                                 startActivity(i);
                             } else{
                                 dia.dismiss();

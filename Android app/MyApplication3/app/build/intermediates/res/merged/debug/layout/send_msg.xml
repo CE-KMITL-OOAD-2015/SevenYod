@@ -51,4 +51,4 @@
         android:layout_marginRight="@dimen/pad_20dp"
         />
 </LinearLayout>
-<!-- From: file:/D:/Android/AndroidStudioProjects/MyApplication3/app/src/main/res/layout/send_msg.xml -->
+<!-- From: file:/D:/Android/MyApplication3/app/src/main/res/layout/send_msg.xml -->

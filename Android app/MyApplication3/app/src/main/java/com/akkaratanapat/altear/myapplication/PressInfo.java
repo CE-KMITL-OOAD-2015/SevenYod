@@ -28,23 +28,19 @@ public class PressInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_press_info);
-        userText = (EditText) findViewById(R.id.user);
-        userNameText = (EditText) findViewById(R.id.userName);
-        passText = (EditText) findViewById(R.id.pwd);
-        emailText = (EditText) findViewById(R.id.email);
         setCustomButton();
 
     }
 
     public void setCustomButton() {
+        userText = (EditText) findViewById(R.id.user);
+        userNameText = (EditText) findViewById(R.id.userName);
+        passText = (EditText) findViewById(R.id.pwd);
+        emailText = (EditText) findViewById(R.id.email);
         submitBtn = (Button) findViewById(R.id.btnReg);
-
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent i = new Intent(getApplicationContext(),MainActivity.class);
-//                startActivity(i);
-
                 responseJsonFromWeb(userText.getText().toString(), userNameText.getText().toString(), passText.getText().toString(), emailText.getText().toString());
                 finish();
             }

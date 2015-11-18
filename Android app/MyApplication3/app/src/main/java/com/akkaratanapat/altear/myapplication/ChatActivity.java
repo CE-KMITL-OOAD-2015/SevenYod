@@ -1,6 +1,9 @@
 package com.akkaratanapat.altear.myapplication;
 
 
+import android.app.Dialog;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +41,8 @@ public class ChatActivity extends AppCompatActivity {
     ChatAdapter nChat;
     Bundle b;
     Handler handler = new Handler();
-    boolean isRunning = true;
+    Runnable r;
+    Dialog dialog;
 
     public ChatActivity() {
 
@@ -49,67 +53,74 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         b = getIntent().getExtras();
-        lv = (ListView) findViewById(R.id.list);
-        textViewName = (TextView)findViewById(R.id.textViewName);
-        sendBtn = (Button) findViewById(R.id.btnSend);
-        messageText = (EditText) findViewById(R.id.txt);
-        nChat = new ChatAdapter(ChatActivity.this, convList);
-
         setComponent();
+        nChat = new ChatAdapter(ChatActivity.this, convList);
         lv.setAdapter(nChat);
         lv.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         lv.setStackFromBottom(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                convList.get(position).changeMark();
-                nChat.notifyDataSetChanged();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                dialog = new Dialog(ChatActivity.this);
+                dialog.setContentView(R.layout.activity_menu);
+                final String[] a = {"Copy", "Mark", "Cancel"};
+                MenuMessageAdapter adpter = new MenuMessageAdapter(getBaseContext(), a);
+                ListView listActivity = (ListView) dialog.findViewById(R.id.listViewActivityMessage);
+                listActivity.setAdapter(adpter);
+                listActivity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                        Toast.makeText(getBaseContext(), a[position2], Toast.LENGTH_SHORT).show();
+                        if (a[position2].equals("Copy")) {
+                            ClipboardManager cm = (ClipboardManager) getBaseContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            cm.setText(convList.get(position).getMsg());
+                            Toast.makeText(getBaseContext(), "Copied to clipboard : " + cm.getText(), Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+                        } else if (a[position2].equals("Mark")) {
+                            convList.get(position).changeMark();
+                            toggleMarked(convList.get(position).getID());
+                            nChat.notifyDataSetChanged();
+                            dialog.cancel();
+                        } else {
+                            dialog.cancel();
+                        }
+                    }
+                });
+                dialog.setCancelable(true);
+                dialog.setTitle("วฏฟรรค");
+                dialog.show();
+
             }
         });
 
         handler = new Handler();
-        if(isRunning) {
-            final Runnable r = new Runnable() {
-                public void run() {
+        r = new Runnable() {
+            public void run() {
                 loadConversation();
                 handler.postDelayed(this, 1000);
             }
         };
-            handler.postDelayed(r, 1000);
-        }
+        handler.postDelayed(r, 1000);
 //        handler.postDelayed(new Runnable() {
-//
 //            @Override
 //            public void run()
 //            {
 //                    loadConversation();
 //            }
 //        }, 3000);
-
     }
 
     @Override
-    protected void onResume()
-    {
-        super.onResume();
-        isRunning = true;
-        loadConversation();
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        isRunning = false;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        isRunning = false;
+    public void onBackPressed() {
+        super.onBackPressed();
+        handler.removeCallbacks(r);
     }
 
     public void setComponent() {
+        lv = (ListView) findViewById(R.id.list);
+        textViewName = (TextView)findViewById(R.id.textViewName);
+        sendBtn = (Button) findViewById(R.id.btnSend);
+        messageText = (EditText) findViewById(R.id.txt);
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +151,39 @@ public class ChatActivity extends AppCompatActivity {
         responseJsonFromWebForLoadMessage(b.getString("ID"), b.getString("IdFriend"), time);
     }
 
+    public void toggleMarked(final String idMessage){
+        String url = "http://203.151.92.184:8080/togglemarked/" + idMessage;
+//        final ProgressDialog dia = ProgressDialog.show(ChatActivity.this, null,
+//                "Loading");
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject resultObjectJSON = response.getJSONObject("resultObject");
+                            String responText = resultObjectJSON.getString("response");
+                            if (responText.equals("true")) {
+                                //dia.dismiss();
+                                Toast.makeText(getBaseContext(),""+idMessage,Toast.LENGTH_SHORT).show();
+                            } else {
+                                //dia.dismiss();
+                                Toast.makeText(getBaseContext(),"sorry",Toast.LENGTH_SHORT).show();
+                            }
+                            nChat.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+//                        dia.dismiss();
+                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        RequestQueue myrequestQueue = Volley.newRequestQueue(this);
+        myrequestQueue.add(jsObjRequest);
+    }
 
     public void responseJsonFromWeb(String idUser, String idBuddy, final String message, final Conversation c) {
         //String url = "http://mol100.esy.es/ooad/lin?user=" + idUser + "&pass=" + idUser;
@@ -176,7 +220,6 @@ public class ChatActivity extends AppCompatActivity {
         RequestQueue myrequestQueue = Volley.newRequestQueue(this);
         myrequestQueue.add(jsObjRequest);
     }
-
 
     public void responseJsonFromWebForLoadMessage(final String idUser, String idBuddy, String date) {
         String url = "http://203.151.92.184:8080/loadmessage/" + idUser + "/" + idBuddy + "/" + date.substring(0, 10) + "%20" + date.substring(11, 19);

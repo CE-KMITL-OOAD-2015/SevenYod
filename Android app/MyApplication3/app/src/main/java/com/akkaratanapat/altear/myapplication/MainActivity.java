@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -33,13 +34,19 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView nameText, emailText;
-    String[] friendList, noFriendList, idFriend, idNoFriend;
+    String[] friendList, noFriendList,requestingFriendList,requestedFriendList,friendEmail,noFriendEmail,requestingFriendEmail
+            ,requestedFriendEmail, idFriend, idNoFriend,idRequestingFriend,idRequestedFriend;
     User userObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setCustomComponent();
+    }
+
+    public void setCustomComponent() {
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -51,11 +58,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        setCustomComponent();
-    }
-
-    public void setCustomComponent() {
 
         Intent i = getIntent();
         userObject = i.getParcelableExtra("User");
@@ -171,28 +173,69 @@ public class MainActivity extends AppCompatActivity
                             JSONObject resultObject = response.getJSONObject("resultObject");
                             JSONArray resultFriendArrayJSON = resultObject.getJSONArray("friend");
                             JSONArray resultNoFriendArrayJSON = resultObject.getJSONArray("notfriend");
+                            JSONArray resultrequestingFriendArrayJSON = resultObject.getJSONArray("requesting");
+                            JSONArray resultrequestedFriendArrayJSON = resultObject.getJSONArray("requested");
+
                             friendList = new String[resultFriendArrayJSON.length()];
                             noFriendList = new String[resultNoFriendArrayJSON.length()];
+                            requestingFriendList = new String[resultrequestingFriendArrayJSON.length()];
+                            requestedFriendList = new String[resultrequestedFriendArrayJSON.length()];
+
                             idFriend = new String[resultFriendArrayJSON.length()];
                             idNoFriend = new String[resultNoFriendArrayJSON.length()];
+                            idRequestingFriend = new String[resultrequestingFriendArrayJSON.length()];
+                            idRequestedFriend = new String[resultrequestedFriendArrayJSON.length()];
+
+                            friendEmail = new String[resultFriendArrayJSON.length()];
+                            noFriendEmail = new String[resultNoFriendArrayJSON.length()];
+                            requestingFriendEmail = new String[resultrequestingFriendArrayJSON.length()];
+                            requestedFriendEmail = new String[resultrequestedFriendArrayJSON.length()];
+
+                            Log.i("ingggggggggggggg",""+resultrequestingFriendArrayJSON.length());
+                            Log.i("edddddddddddd",""+resultrequestedFriendArrayJSON.length());
+
                             for (int i = 0; i < resultFriendArrayJSON.length(); i++) {
                                 JSONObject obj = (JSONObject) resultFriendArrayJSON.get(i);
-                                friendList[i] = obj.getString("username");
+                                friendList[i] = obj.getString("alias");
                                 idFriend[i] = obj.getString("userid");
+                                friendEmail[i] = obj.getString("email");
                             }
                             for (int i = 0; i < resultNoFriendArrayJSON.length(); i++) {
                                 JSONObject obj2 = (JSONObject) resultNoFriendArrayJSON.get(i);
-                                noFriendList[i] = obj2.getString("username");
+                                noFriendList[i] = obj2.getString("alias");
                                 idNoFriend[i] = obj2.getString("userid");
+                                noFriendEmail[i] = obj2.getString("email");
+                            }
+
+                            for (int i = 0; i < resultrequestingFriendArrayJSON.length(); i++) {
+                                JSONObject obj3 = (JSONObject) resultrequestingFriendArrayJSON.get(i);
+                                requestingFriendList[i] = obj3.getString("alias");
+                                idRequestingFriend[i] = obj3.getString("userid");
+                                requestingFriendEmail[i] = obj3.getString("email");
+                            }
+                            for (int i = 0; i < resultrequestedFriendArrayJSON.length(); i++) {
+                                JSONObject obj4 = (JSONObject) resultrequestedFriendArrayJSON.get(i);
+                                requestedFriendList[i] = obj4.getString("alias");
+                                idRequestedFriend[i] = obj4.getString("userid");
+                                requestedFriendEmail[i] = obj4.getString("email");
                             }
                             dia.dismiss();
                             if (mode == 0) {
                                 Fragment f = new CommunityFragment();
                                 Bundle bundle = new Bundle();
-                                bundle.putStringArray("List", friendList);
-                                bundle.putStringArray("List2", noFriendList);
+                                bundle.putString("ID", userObject.ID);
+                                bundle.putStringArray("ListFriend", friendList);
+                                bundle.putStringArray("ListNoFriend", noFriendList);
+                                bundle.putStringArray("ListRequestingFriend", requestingFriendList);
+                                bundle.putStringArray("ListRequestedFriend", requestedFriendList);
                                 bundle.putStringArray("IDFriend", idFriend);
                                 bundle.putStringArray("IDNoFriend", idNoFriend);
+                                bundle.putStringArray("IDRequestingFriend", idRequestingFriend);
+                                bundle.putStringArray("IDRequestedFriend", idRequestedFriend);
+                                bundle.putStringArray("EmailFriend",friendEmail);
+                                bundle.putStringArray("EmailNoFriend",noFriendEmail);
+                                bundle.putStringArray("EmailRequestingFriend",requestingFriendEmail);
+                                bundle.putStringArray("EmailRequestedFriend",requestedFriendEmail);
                                 bundle.putString("ID", id);
                                 f.setArguments(bundle);
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -204,6 +247,7 @@ public class MainActivity extends AppCompatActivity
                                 bundle.putStringArray("List", friendList);
                                 bundle.putInt("mode", 1);
                                 bundle.putStringArray("IDFriend", idFriend);
+                                bundle.putStringArray("EmailFriend",friendEmail);
                                 bundle.putString("ID", id);
                                 f.setArguments(bundle);
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -214,6 +258,7 @@ public class MainActivity extends AppCompatActivity
                                 Bundle bundle = new Bundle();
                                 bundle.putStringArray("List", friendList);
                                 bundle.putStringArray("IDFriend", idFriend);
+                                bundle.putStringArray("EmailFriend",friendEmail);
                                 bundle.putString("ID", id);
                                 bundle.putInt("mode", 2);
                                 f.setArguments(bundle);
