@@ -15,4 +15,4 @@ Group - 7 , mChat chat with anyone you want, about anything you want, Here!
   - mark
 
 # Demo video  
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://youtu.be/bS5uesJxHpU)
+[![IMAGE ALT TEXT HERE](http://203.151.92.184/pic.png)](https://youtu.be/bS5uesJxHpU)
