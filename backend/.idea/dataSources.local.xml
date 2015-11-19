@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="mchat" uuid="43bd3ba9-5cd9-4587-8377-9baf5b407126">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>tests.*</schema-pattern>
+      <default-schemas>tests.*</default-schemas>
+    </data-source>
+  </component>
+</project>
