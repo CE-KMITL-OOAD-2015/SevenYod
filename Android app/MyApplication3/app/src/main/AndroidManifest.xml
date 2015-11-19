@@ -45,8 +45,19 @@
             android:name=".MarkedActivity"
             android:label=""
             android:screenOrientation="portrait" />
-        <activity android:name=".FriendProfileActivity" />
-        <activity android:name=".MenuActivity"></activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ForgotPassActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity android:name=".FriendProfileActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity android:name=".MenuActivity">
+        </activity>
     </application>
 
 </manifest>

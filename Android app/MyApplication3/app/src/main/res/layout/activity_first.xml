@@ -69,4 +69,15 @@
             android:layout_alignStart="@+id/button" />
     </LinearLayout>
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="161dp"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password ?"
+        android:id="@+id/buttonForgot"
+        android:layout_gravity="center_horizontal"
+        android:background="#ff5100"
+        android:layout_marginTop="20dp"
+        android:textColor="#ffffff" />
+
 </LinearLayout>

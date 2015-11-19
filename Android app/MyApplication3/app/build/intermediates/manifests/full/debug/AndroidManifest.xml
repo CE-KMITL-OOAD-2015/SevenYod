@@ -51,8 +51,20 @@
             android:name="com.akkaratanapat.altear.myapplication.MarkedActivity"
             android:label=""
             android:screenOrientation="portrait" />
-        <activity android:name="com.akkaratanapat.altear.myapplication.FriendProfileActivity" />
-        <activity android:name="com.akkaratanapat.altear.myapplication.MenuActivity" />
+        <activity
+            android:name="com.akkaratanapat.altear.myapplication.EditProfileActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.akkaratanapat.altear.myapplication.ForgotPassActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.akkaratanapat.altear.myapplication.FriendProfileActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity android:name="com.akkaratanapat.altear.myapplication.MenuActivity" >
+        </activity>
     </application>
 
 </manifest>

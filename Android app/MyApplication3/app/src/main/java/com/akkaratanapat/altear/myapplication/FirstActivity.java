@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +24,7 @@ import org.json.JSONObject;
 
 public class FirstActivity extends AppCompatActivity {
 
-    Button loginBtn, registerBtn;
+    Button loginBtn, registerBtn, forgotBtn;
     EditText userName, password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class FirstActivity extends AppCompatActivity {
     public void setCustomComponent() {
         loginBtn = (Button) findViewById(R.id.button);
         registerBtn = (Button) findViewById(R.id.button2);
+        forgotBtn = (Button) findViewById(R.id.buttonForgot);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,13 +64,22 @@ public class FirstActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), PressInfo.class);
+                Intent i;
+                i = new Intent(getApplicationContext(), PressInfo.class);
+                startActivity(i);
+            }
+        });
+        forgotBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i;
+                i = new Intent(getApplicationContext(), ForgotPassActivity.class);
                 startActivity(i);
             }
         });
     }
 
-    public void responseJsonFromWeb(String name, String pass) {
+    public void responseJsonFromWeb(final String name, final String pass) {
         String url = "http://203.151.92.184:8080/login/"+name+"/"+pass;
         final ProgressDialog dia = ProgressDialog.show(FirstActivity.this, null,
                 "Loading");
@@ -85,6 +96,9 @@ public class FirstActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), resultObjectJSON.getString("alias") + " has logged in", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(getBaseContext(), MainActivity.class);
                                 i.putExtra("User",new User(resultObjectJSON.getString("alias"),resultObjectJSON.getString("email"),resultObjectJSON.getString("userid")));
+                                i.putExtra("Username",name);
+                                i.putExtra("Password",pass);
+                                Log.i("pass",pass);
                                 startActivity(i);
                             } else{
                                 dia.dismiss();

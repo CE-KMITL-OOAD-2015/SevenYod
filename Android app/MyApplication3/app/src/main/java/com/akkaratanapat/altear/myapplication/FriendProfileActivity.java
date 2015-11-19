@@ -2,6 +2,7 @@ package com.akkaratanapat.altear.myapplication;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,7 +24,7 @@ public class FriendProfileActivity extends AppCompatActivity {
     Bundle b;
     ImageView imageView;
     TextView textName, textEmail;
-    Button button,buttonCancle;
+    Button button;
     int mode;
     String userID;
 
@@ -41,7 +42,6 @@ public class FriendProfileActivity extends AppCompatActivity {
         textName = (TextView) findViewById(R.id.textNameFriend);
         textEmail = (TextView) findViewById(R.id.textEmailFriend);
         button = (Button) findViewById(R.id.buttonFriend);
-        buttonCancle = (Button)findViewById(R.id.buttonCancle);
 
         textName.setText(b.getString("name"));
         textEmail.setText(b.getString("email"));
@@ -52,19 +52,16 @@ public class FriendProfileActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "1", Toast.LENGTH_SHORT).show();
             button.setText("Unfriend");
             button.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            buttonCancle.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_account_circle_white_48dp));
         }
         else if(mode == 2){
             Toast.makeText(getBaseContext(), "2", Toast.LENGTH_SHORT).show();
             button.setText("Add Friend");
             button.setBackgroundColor(getResources().getColor(R.color.blue_btn));
-            buttonCancle.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_account_circle_white_48dp));
         }
         else if(mode == 3){
             Toast.makeText(getBaseContext(), "3", Toast.LENGTH_SHORT).show();
             button.setText("Requesting");
             button.setBackgroundColor(getResources().getColor(R.color.blue_btn));
-            buttonCancle.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_account_circle_white_48dp));
         }
         else if(mode == 4){
             Toast.makeText(getBaseContext(), "4", Toast.LENGTH_SHORT).show();
@@ -107,19 +104,9 @@ public class FriendProfileActivity extends AppCompatActivity {
                 }
             }
         });
-        buttonCancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "1", Toast.LENGTH_SHORT).show();
-                button.setText("Add friend");
-                button.setBackgroundColor(getResources().getColor(R.color.blue_btn));
-                responseJsonFromWeb(userID, idFriend, 5);//reject
-                mode = 2;
-            }
-        });
     }
 
-    public void responseJsonFromWeb(String idUser, String idBuddy,int mode) {
+    public void responseJsonFromWeb(final String idUser, final String idBuddy,int mode) {
         //String url = "http://mol100.esy.es/ooad/lin?user=" + idUser + "&pass=" + idUser;
         String url = "";
         if(mode ==1){// add
@@ -137,6 +124,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         else{//reject
             url = "http://203.151.92.184:8080/rejectfriend/" + idUser + "/" + idBuddy;
         }
+        Toast.makeText(getBaseContext(),idUser  + " : "+ idBuddy + " : " + url,Toast.LENGTH_SHORT).show();
 //        final ProgressDialog dia = ProgressDialog.show(ChatActivity.this, null,
 //                "Loading");
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -145,12 +133,14 @@ public class FriendProfileActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject resultObjectJSON = response.getJSONObject("resultObject");
-                            String responText = resultObjectJSON.getString("response");
+                            String responText = resultObjectJSON.getString("status");
                             if (responText.equals("true")) {
                                 //dia.dismiss();
+                                Log.i("aaaaaa",idUser  + " : "+ idBuddy);
                                 Toast.makeText(getBaseContext(),"Success",Toast.LENGTH_SHORT).show();
                             } else {
                                 //dia.dismiss();
+                                Log.i("bbbbbb",idUser  + " : "+ idBuddy);
                                 Toast.makeText(getBaseContext(),"Unsuccess",Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {

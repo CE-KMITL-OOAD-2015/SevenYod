@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity
     String[] friendList, noFriendList,requestingFriendList,requestedFriendList,friendEmail,noFriendEmail,requestingFriendEmail
             ,requestedFriendEmail, idFriend, idNoFriend,idRequestingFriend,idRequestedFriend;
     User userObject;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +60,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent i = getIntent();
-        userObject = i.getParcelableExtra("User");
+        intent = getIntent();
+        userObject = intent.getParcelableExtra("User");
         nameText = (TextView) findViewById(R.id.nameText);
         emailText = (TextView) findViewById(R.id.emailText);
         nameText.setText(userObject.UserName);
@@ -131,6 +132,9 @@ public class MainActivity extends AppCompatActivity
             bundle.putString("Name",userObject.UserName);
             bundle.putString("Email",userObject.UserEmail);
             bundle.putString("ID",userObject.ID);
+            bundle.putString("Username", intent.getStringExtra("Username"));
+            bundle.putString("Pass",intent.getStringExtra("Password"));
+            Log.i("pass",intent.getStringExtra("Password"));
             f.setArguments(bundle);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.container, f);

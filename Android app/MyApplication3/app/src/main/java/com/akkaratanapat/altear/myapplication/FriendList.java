@@ -37,10 +37,10 @@ public class FriendList extends ArrayAdapter<String> {
         textView.setAnimation(AnimationUtils.loadAnimation(mContext
                 , R.anim.listview_anim));
 
-        TextView textView2 = (TextView)view.findViewById(R.id.textView2);
-        textView2.setText(str2[position]);
-        textView2.setAnimation(AnimationUtils.loadAnimation(mContext
-                , R.anim.listview_anim));
+//        TextView textView2 = (TextView)view.findViewById(R.id.textView2);
+//        textView2.setText(str2[position]);
+//        textView2.setAnimation(AnimationUtils.loadAnimation(mContext
+//                , R.anim.listview_anim));
         //ImageView imageView = (ImageView)view.findViewById(R.id.imageView1);
         //imageView.setBackgroundResource(resId[position]);
 

@@ -1,13 +1,13 @@
 package com.akkaratanapat.altear.myapplication;
 
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -54,6 +54,7 @@ public class CommunityFragment extends Fragment {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_community, container, false);
         Bundle bundle = this.getArguments();
+
         list = bundle.getStringArray("ListFriend");
         list2 = bundle.getStringArray("ListNoFriend");
         list3 = bundle.getStringArray("ListRequestingFriend");
@@ -93,6 +94,30 @@ public class CommunityFragment extends Fragment {
             }
         });
 
+        listViewFriend.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
+
         listViewNoFriend = (ListView)v.findViewById(R.id.listViewOther);
         listViewNoFriend.setAdapter(noFriendList);
         listViewNoFriend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,6 +131,30 @@ public class CommunityFragment extends Fragment {
                 i.putExtra("ID", userID);
                 startActivity(i);
                 Toast.makeText(getActivity(), list[position], Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        listViewNoFriend.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
             }
         });
 
@@ -125,6 +174,30 @@ public class CommunityFragment extends Fragment {
             }
         });
 
+        listViewRequestingFriend.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
+
         listViewRequestedFriend = (ListView)v.findViewById(R.id.listViewRequested);
         listViewRequestedFriend.setAdapter(requestedList);
         listViewRequestedFriend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,17 +214,36 @@ public class CommunityFragment extends Fragment {
             }
         });
 
+        listViewRequestedFriend.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
+
 //        handler = new Handler();
 //        r = new Runnable() {
 //            public void run() {
 //                responseJsonFromWebFriendList(userID);
-//                handler.postDelayed(this, 1000);
+//                handler.postDelayed(this, 60000);
 //            }
 //        };
-//        handler.postDelayed(r, 1000);
-
-        Log.i("ingggggggggggggg", "" + list3.length);
-        Log.i("edddddddddddd",""+list4.length);
+//        handler.postDelayed(r, 60000);
         return v;
     }
 
@@ -164,14 +256,13 @@ public class CommunityFragment extends Fragment {
 
     public void responseJsonFromWebFriendList(final String id) {
         String url = "http://203.151.92.184:8080/getfriend/" + id;
-        final ProgressDialog dia = ProgressDialog.show(getActivity(), null,
-                "Loading");
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject resultObject = response.getJSONObject("resultObject");
+
                             JSONArray resultFriendArrayJSON = resultObject.getJSONArray("friend");
                             JSONArray resultNoFriendArrayJSON = resultObject.getJSONArray("notfriend");
                             JSONArray resultrequestingFriendArrayJSON = resultObject.getJSONArray("requesting");
@@ -217,7 +308,6 @@ public class CommunityFragment extends Fragment {
                                 idRequestedFriend[i] = obj4.getString("userid");
                                 email4[i] = obj4.getString("email");
                             }
-                            dia.dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -225,7 +315,6 @@ public class CommunityFragment extends Fragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        dia.dismiss();
                         Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                     }
                 });

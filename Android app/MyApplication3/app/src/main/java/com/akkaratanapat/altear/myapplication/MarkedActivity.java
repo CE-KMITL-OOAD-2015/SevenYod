@@ -1,6 +1,9 @@
 package com.akkaratanapat.altear.myapplication;
 
 
+import android.app.Dialog;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -40,7 +44,7 @@ public class MarkedActivity extends AppCompatActivity {
     Handler handler = new Handler();
     boolean isRunning;
     Runnable r;
-
+    Dialog dialog;
 
     public MarkedActivity() {
 
@@ -82,6 +86,41 @@ public class MarkedActivity extends AppCompatActivity {
                 nChat.notifyDataSetChanged();
             }
         });
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                dialog = new Dialog(MarkedActivity.this);
+                dialog.setContentView(R.layout.activity_menu);
+                final String[] a = {"Copy", "Mark", "Cancel"};
+                MenuMessageAdapter adpter = new MenuMessageAdapter(getBaseContext(), a);
+                ListView listActivity = (ListView) dialog.findViewById(R.id.listViewActivityMessage);
+                listActivity.setAdapter(adpter);
+                listActivity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                        Toast.makeText(getBaseContext(), a[position2], Toast.LENGTH_SHORT).show();
+                        if (a[position2].equals("Copy")) {
+                            ClipboardManager cm = (ClipboardManager) getBaseContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            cm.setText(convList.get(position).getMsg());
+                            Toast.makeText(getBaseContext(), "Copied to clipboard : " + cm.getText(), Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+                        } else if (a[position2].equals("Mark")) {
+                            convList.get(position).changeMark();
+                            toggleMarked(convList.get(position).getID());
+                            nChat.notifyDataSetChanged();
+                            dialog.cancel();
+                        } else {
+                            dialog.cancel();
+                        }
+                    }
+                });
+                dialog.setCancelable(true);
+                dialog.setTitle("Menu");
+                dialog.show();
+
+            }
+        });
+
         Toast.makeText(getBaseContext(),"Cre",Toast.LENGTH_SHORT).show();
 
         handler = new Handler();
@@ -157,6 +196,7 @@ public class MarkedActivity extends AppCompatActivity {
     }
 
     public void responseJsonFromWebForLoadMessage(final String idUser, String idBuddy, String date) {
+        deleteCache(this);
         String url = "http://203.151.92.184:8080/loadmarked/" + idUser + "/" + idBuddy;
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -183,7 +223,7 @@ public class MarkedActivity extends AppCompatActivity {
                                     convList.clear();
                                     nChat.notifyDataSetChanged();
                                 }
-                                Toast.makeText(getBaseContext(), "Just do it!!!", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getBaseContext(), "Just do it!!!", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -197,6 +237,27 @@ public class MarkedActivity extends AppCompatActivity {
                 });
         RequestQueue myrequestQueue = Volley.newRequestQueue(this);
         myrequestQueue.add(jsObjRequest);
+    }
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            if (dir != null && dir.isDirectory()) {
+                deleteDir(dir);
+            }
+        } catch (Exception e) {}
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
     }
 }
 

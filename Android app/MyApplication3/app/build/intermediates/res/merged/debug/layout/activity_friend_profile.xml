@@ -8,6 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.akkaratanapat.altear.myapplication.FriendProfileActivity">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -17,12 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:id="@+id/imageView5"
                 android:src="@drawable/ic_person_black_48dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="10dp" />
 
@@ -37,7 +38,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Name"
                     android:id="@+id/textNameFriend"
-                    android:layout_marginTop="20dp" />
+                    android:layout_marginTop="40dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -49,28 +50,17 @@
                     android:layout_marginTop="10dp" />
             </LinearLayout>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add"
-                android:id="@+id/buttonFriend"
-                android:background="@color/main_color_green"
-                android:textColor="@color/white"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="20dp" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add"
-                android:id="@+id/buttonCancle"
-                android:background="@color/main_color_gray"
-                android:textColor="@color/white"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="20dp" />
 
         </LinearLayout>
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:id="@+id/buttonFriend"
+            android:background="@color/main_color_green"
+            android:textColor="@color/white"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp" />
     </LinearLayout>
 </LinearLayout>
 <!-- From: file:/D:/Android/MyApplication3/app/src/main/res/layout/activity_friend_profile.xml -->

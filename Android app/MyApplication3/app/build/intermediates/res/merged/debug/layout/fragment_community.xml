@@ -1,10 +1,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:nestedScrollingEnabled="true">
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
         android:orientation="vertical"
         android:weightSum="1"
         tools:context="com.akkaratanapat.altear.myapplication.CommunityFragment">
@@ -14,9 +16,10 @@
 
         <TextView
             android:id="@+id/textViewFriend"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
+            android:layout_margin="@dimen/pad_5dp"
             android:text="______Friend_______________________"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/colorPrimary" />
@@ -24,12 +27,15 @@
         <ListView
             android:id="@+id/listViewFriend"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="100dp"
+            android:nestedScrollingEnabled="true"
+            android:background="@color/white_smoke"/>
 
         <TextView
             android:id="@+id/textViewRequesting"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/pad_5dp"
             android:text="______Requesting_______________________"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/orange_btn" />
@@ -37,12 +43,15 @@
         <ListView
             android:id="@+id/listViewRequesting"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="200dp"
+            android:nestedScrollingEnabled="true"
+            android:background="@color/white_smoke"/>
 
         <TextView
             android:id="@+id/textViewRequested"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/pad_5dp"
             android:text="______Requested_______________________"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/main_color_green" />
@@ -50,13 +59,16 @@
         <ListView
             android:id="@+id/listViewRequested"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="200dp"
+            android:nestedScrollingEnabled="true"
+            android:background="@color/white_smoke"/>
 
 
         <TextView
             android:id="@+id/textViewOther"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/pad_5dp"
             android:text="______No friend_______________________"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/colorAccent" />
@@ -64,6 +76,9 @@
         <ListView
             android:id="@+id/listViewOther"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="200dp"
+            android:nestedScrollingEnabled="true"
+            android:background="@color/white_smoke"/>
+
     </LinearLayout>
 </ScrollView><!-- From: file:/D:/Android/MyApplication3/app/src/main/res/layout/fragment_community.xml -->

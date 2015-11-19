@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -87,7 +88,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
                 dialog.setCancelable(true);
-                dialog.setTitle("วฏฟรรค");
+                dialog.setTitle("Menu");
                 dialog.show();
 
             }
@@ -143,12 +144,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void loadConversation() {
-        String time = "2015-11-04 09:09:05";
+        //String time = "2015-11-04 09:09:05";
+        String id = "-1";
         int length = convList.size();
         if(length>0) {
-            time = convList.get(length - 1).getDate();
+            id = convList.get(length - 1).getID();
         }
-        responseJsonFromWebForLoadMessage(b.getString("ID"), b.getString("IdFriend"), time);
+        responseJsonFromWebForLoadMessage(b.getString("ID"), b.getString("IdFriend"), id);
     }
 
     public void toggleMarked(final String idMessage){
@@ -200,11 +202,14 @@ public class ChatActivity extends AppCompatActivity {
                             if (responText.equals("true")) {
                                 //dia.dismiss();
                                 c.setStatus(Conversation.STATUS_SENT);
+                                c.setID(resultObjectJSON.getString("id"));
+                                convList.add(c);
                             } else {
                                 //dia.dismiss();
-                                c.setStatus(Conversation.STATUS_FAILED);
+                                //c.setStatus(Conversation.STATUS_FAILED);
+                                Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT).show();
                             }
-                            convList.add(c);
+                            //convList.add(c);
                             nChat.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -221,8 +226,10 @@ public class ChatActivity extends AppCompatActivity {
         myrequestQueue.add(jsObjRequest);
     }
 
-    public void responseJsonFromWebForLoadMessage(final String idUser, String idBuddy, String date) {
-        String url = "http://203.151.92.184:8080/loadmessage/" + idUser + "/" + idBuddy + "/" + date.substring(0, 10) + "%20" + date.substring(11, 19);
+    public void responseJsonFromWebForLoadMessage(final String idUser, String idBuddy, String id) {
+        deleteCache(this);
+        //String url = "http://203.151.92.184:8080/loadmessage/" + idUser + "/" + idBuddy + "/" + date.substring(0, 10) + "%20" + date.substring(11, 19);
+        String url = "http://203.151.92.184:8080/loadmessage/" + idUser + "/" + idBuddy + "/" + id;
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -243,7 +250,7 @@ public class ChatActivity extends AppCompatActivity {
                                 nChat.notifyDataSetChanged();
                             }
                             else{
-                                Toast.makeText(getBaseContext(), "Just do it!!!", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getBaseContext(), res, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -257,6 +264,28 @@ public class ChatActivity extends AppCompatActivity {
                 });
         RequestQueue myrequestQueue = Volley.newRequestQueue(this);
         myrequestQueue.add(jsObjRequest);
+    }
+
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            if (dir != null && dir.isDirectory()) {
+                deleteDir(dir);
+            }
+        } catch (Exception e) {}
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
     }
 }
 
